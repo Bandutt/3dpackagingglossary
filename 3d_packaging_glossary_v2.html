@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Packaging Glossary | Advanced Semiconductor Packaging Terms</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #171b23;
+    --border: #1e2430;
+    --accent: #00d4ff;
+    --accent2: #7b61ff;
+    --accent3: #00ff9d;
+    --text: #e2e8f0;
+    --text-dim: #8892a4;
+    --text-muted: #4a5568;
+    --shadow: rgba(0,0,0,0.4);
+    --modal-border: rgba(255,255,255,0.1);
+    --grid-line: rgba(0, 212, 255, 0.03);
+    --card-hover-border: rgba(255,255,255,0.1);
+    --transition-theme: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  html.light {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #e8eef5;
+    --border: #d1dce8;
+    --accent: #0099bb;
+    --accent2: #5a3fd4;
+    --accent3: #00994d;
+    --text: #1a2030;
+    --text-dim: #4a5568;
+    --text-muted: #94a3b8;
+    --shadow: rgba(0,0,0,0.12);
+    --modal-border: rgba(0,0,0,0.08);
+    --grid-line: rgba(0, 153, 187, 0.05);
+    --card-hover-border: rgba(0,0,0,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+    transition: var(--transition-theme);
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .header-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 16px;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 240px;
+    max-width: 400px;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+  }
+
+  #search {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px 10px 40px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  #search:focus { border-color: var(--accent); }
+  #search::placeholder { color: var(--text-muted); }
+
+  .filter-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--text); }
+
+  .filter-btn.active {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .filter-btn .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 32px;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Category sections */
+  .category-section {
+    margin-bottom: 48px;
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .category-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .category-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 400;
+  }
+
+  .category-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .category-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* Term grid */
+  .term-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  /* Term card */
+  .term-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .term-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--cat-color, var(--accent));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .term-card:hover {
+    border-color: var(--card-hover-border);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px var(--shadow);
+  }
+
+  .term-card:hover::before { opacity: 1; }
+
+  .card-header {
+    padding: 20px 20px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .term-acronym {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .term-full {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+
+  .tag {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  .card-body {
+    padding: 0 20px 20px;
+  }
+
+  .card-definition {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .ref-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .ref-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(0, 212, 255, 0.06);
+  }
+
+  .ref-link svg { flex-shrink: 0; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--modal-border);
+    border-radius: 14px;
+    max-width: 680px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.2s;
+  }
+
+  .modal-overlay.open .modal {
+    transform: scale(1) translateY(0);
+  }
+
+  .modal-top {
+    padding: 28px 28px 0;
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 1;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-dim);
+    transition: all 0.15s;
+  }
+
+  .modal-close:hover { color: var(--text); border-color: var(--card-hover-border); }
+
+  .modal-acronym {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .modal-fullname {
+    font-size: 15px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+
+  .modal-body {
+    padding: 0 28px 28px;
+  }
+
+  .modal-section {
+    margin-bottom: 24px;
+  }
+
+  .modal-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 10px;
+  }
+
+  .modal-definition {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  .modal-refs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-ref-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+
+  .modal-ref-item:hover {
+    border-color: var(--accent);
+    background: rgba(0, 212, 255, 0.06);
+  }
+
+  .ref-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.15);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--accent);
+  }
+
+  .ref-info { flex: 1; min-width: 0; }
+
+  .ref-name {
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ref-url {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .confusion-note {
+    padding: 12px 16px;
+    background: rgba(123, 97, 255, 0.08);
+    border: 1px solid rgba(123, 97, 255, 0.2);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .confusion-note strong {
+    color: var(--accent2);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* No results */
+  .no-results {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-muted);
+    display: none;
+  }
+
+  .no-results.visible { display: block; }
+
+  /* Theme toggle */
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px 6px 8px;
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    transition: all 0.2s, var(--transition-theme);
+    box-shadow: 0 2px 12px var(--shadow);
+    user-select: none;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--text);
+    box-shadow: 0 4px 20px var(--shadow);
+  }
+
+  .toggle-track {
+    width: 36px;
+    height: 20px;
+    background: var(--border);
+    border-radius: 999px;
+    position: relative;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  html.light .toggle-track {
+    background: var(--accent);
+  }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    background: var(--text-dim);
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.3s ease;
+  }
+
+  html.light .toggle-thumb {
+    transform: translateX(16px);
+    background: #fff;
+  }
+
+  .toggle-icon {
+    font-size: 14px;
+    line-height: 1;
+    transition: transform 0.4s ease;
+  }
+
+  html.light .toggle-icon { transform: rotate(180deg); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0;
+    margin-top: 80px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* hidden card */
+  .term-card.hidden { display: none; }
+  .category-section.hidden { display: none; }
+
+  @media (max-width: 640px) {
+    .stats-bar { flex-wrap: wrap; gap: 16px; }
+    .term-grid { grid-template-columns: 1fr; }
+    .modal-acronym { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" id="theme-toggle" title="라이트/다크 모드 전환">
+  <span class="toggle-icon" id="toggle-icon">🌙</span>
+  <div class="toggle-track"><div class="toggle-thumb"></div></div>
+  <span id="toggle-label">Dark</span>
+</button>
+
+<div class="container">
+  <header>
+    <div class="header-badge">Advanced Semiconductor Packaging</div>
+    <h1>3D Packaging <span>Glossary</span></h1>
+    <p class="subtitle">반도체 첨단 패키징 핵심 용어 정의 및 레퍼런스 모음. 클릭하면 상세 정의와 출처를 확인할 수 있습니다.</p>
+  </header>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="search" placeholder="용어 검색..." autocomplete="off">
+    </div>
+    <div class="filter-group" id="filter-group">
+      <button class="filter-btn active" data-cat="all">전체</button>
+      <button class="filter-btn" data-cat="memory"><span class="dot" style="background:#ff6b6b"></span>메모리</button>
+      <button class="filter-btn" data-cat="interconnect"><span class="dot" style="background:#00d4ff"></span>인터커넥트</button>
+      <button class="filter-btn" data-cat="material"><span class="dot" style="background:#00ff9d"></span>소재/재료</button>
+      <button class="filter-btn" data-cat="process"><span class="dot" style="background:#ffa726"></span>공정</button>
+      <button class="filter-btn" data-cat="packaging"><span class="dot" style="background:#7b61ff"></span>패키징 기술</button>
+      <button class="filter-btn" data-cat="substrate"><span class="dot" style="background:#f06292"></span>기판</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num" id="stat-total">22</div>
+      <div class="stat-label">Total Terms</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-visible">22</div>
+      <div class="stat-label">Showing</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Categories</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">2025</div>
+      <div class="stat-label">Last Updated</div>
+    </div>
+  </div>
+
+  <div id="glossary-root"></div>
+  <div class="no-results" id="no-results">검색 결과가 없습니다.</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-top">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="modal-acronym" id="m-acronym"></div>
+      <div class="modal-fullname" id="m-fullname"></div>
+      <div id="m-tag-wrap"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-label">📖 정의 (Definition)</div>
+        <div class="modal-definition" id="m-definition"></div>
+      </div>
+      <div class="modal-section" id="m-confusion-wrap" style="display:none">
+        <div class="modal-label">⚠️ 헷갈리기 쉬운 포인트</div>
+        <div class="confusion-note" id="m-confusion"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-label">🔗 참고 자료 (References)</div>
+        <div class="modal-refs" id="m-refs"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    3D Advanced Packaging Glossary · For 3D Dashboard Reference · Updated April 2025
+  </div>
+</footer>
+
+<script>
+const CATEGORIES = {
+  memory:       { label: '메모리', color: '#ff6b6b' },
+  interconnect: { label: '인터커넥트', color: '#00d4ff' },
+  material:     { label: '소재/재료', color: '#00ff9d' },
+  process:      { label: '공정', color: '#ffa726' },
+  packaging:    { label: '패키징 기술', color: '#7b61ff' },
+  substrate:    { label: '기판', color: '#f06292' },
+};
+
+const TERMS = [
+  // ─── 메모리 ───
+  {
+    id: 'hbm', acronym: 'HBM', full: 'High Bandwidth Memory', cat: 'memory',
+    def: '3D 수직 적층 DRAM 구조의 고속 메모리 인터페이스. 여러 DRAM 다이를 TSV(Through-Silicon Via)로 수직 연결하여 1024비트 이상의 광폭 인터페이스를 구현하며, AI/HPC 가속기와 GPU 등에 필수적으로 사용됩니다. HBM3E 기준 약 1 TB/s, HBM4는 2 TB/s급 대역폭을 제공합니다. GPU 옆에 실리콘 인터포저 위에 함께 탑재(2.5D 패키징)되어 낮은 지연과 높은 에너지 효율을 달성합니다.',
+    confusion: 'GDDR와 혼동 주의: GDDR은 별도 메모리 모듈 방식으로 좁은 버스 폭에 높은 클럭을 사용하는 반면, HBM은 넓은 버스(1024비트+)와 낮은 클럭을 사용하며 SoC 패키지 내에 2.5D로 통합됩니다. HBM2/HBM2E/HBM3/HBM3E/HBM4는 세대명이며, 숫자가 높을수록 최신 세대입니다.',
+    refs: [
+      { name: 'Wikipedia – High Bandwidth Memory', url: 'https://en.wikipedia.org/wiki/High_Bandwidth_Memory' },
+      { name: 'Rambus – HBM Everything You Need to Know', url: 'https://www.rambus.com/blogs/hbm3-everything-you-need-to-know/' },
+      { name: 'Samsung Semiconductor – HBM', url: 'https://semiconductor.samsung.com/dram/hbm/' },
+      { name: 'Wevolver – HBM Deep Dive', url: 'https://www.wevolver.com/article/what-is-hbm-high-bandwidth-memory-deep-dive-into-architecture-packaging-and-applications' },
+    ]
+  },
+  {
+    id: 'dram', acronym: 'DRAM', full: 'Dynamic Random Access Memory', cat: 'memory',
+    def: '커패시터와 트랜지스터 한 쌍으로 1비트를 저장하는 휘발성 메모리. 전하가 빠르게 누설되므로 주기적인 리프레시가 필요합니다. HBM의 기본 구성 요소이며, DDR5/LPDDR5 등 다양한 DRAM 인터페이스 표준이 존재합니다.',
+    confusion: 'SRAM과 혼동 주의: SRAM은 리프레시 불필요하고 속도가 빠르지만 면적이 크고 비쌉니다. DRAM은 밀도가 높고 저렴하지만 속도가 느리며 리프레시가 필요합니다. 일반적으로 "메모리(RAM)"라고 하면 DRAM을 의미합니다.',
+    refs: [
+      { name: 'Wikipedia – DRAM', url: 'https://en.wikipedia.org/wiki/Dynamic_random-access_memory' },
+      { name: 'Semiconductor Engineering – DRAM', url: 'https://semiengineering.com/knowledge_centers/memory/volatile-memory/dynamic-random-access-memory/' },
+    ]
+  },
+
+  // ─── 인터커넥트 ───
+  {
+    id: 'tsv', acronym: 'TSV', full: 'Through-Silicon Via', cat: 'interconnect',
+    def: '실리콘 웨이퍼 또는 다이를 완전히 관통하는 수직 전기적 연결(비아). 와이어본딩 대비 초고밀도 인터커넥트를 구현하며, 3D 적층 패키지와 3D-IC에서 다이 간 신호·전원을 수직으로 연결합니다. HBM 스택에서 DRAM 다이 간 연결에 필수적으로 사용됩니다. 깊은 반응성 이온 에칭(DRIE)으로 홀을 형성하고 구리로 채웁니다.',
+    confusion: 'TGV(Through-Glass Via)와 혼동 주의: TSV는 실리콘을, TGV는 유리 기판을 관통합니다. Via-first/Middle/Last는 TSV 형성 시점에 따른 구분입니다.',
+    refs: [
+      { name: 'Wikipedia – Through-Silicon Via', url: 'https://en.wikipedia.org/wiki/Through-silicon_via' },
+      { name: 'Samsung – TSV Technology', url: 'https://semiconductor.samsung.com/support/tools-resources/dictionary/semiconductor-glossary-tsv/' },
+      { name: 'Cadence – What Are Through-Silicon Vias?', url: 'https://resources.system-analysis.cadence.com/blog/what-are-through-silicon-vias' },
+      { name: 'ScienceDirect – TSV Overview', url: 'https://www.sciencedirect.com/topics/computer-science/through-silicon-vias' },
+    ]
+  },
+  {
+    id: 'rdl', acronym: 'RDL', full: 'Redistribution Layer', cat: 'interconnect',
+    def: 'IC 다이의 I/O 패드를 원하는 위치로 재배선하는 추가 금속 배선층. 팬아웃 웨이퍼 레벨 패키징(FO-WLP), 2.5D 인터포저, 3D IC 스태킹에서 핵심 역할을 합니다. 구리 트레이스와 유전체 소재로 구성되며, 최신 공정에서는 2μm 이하의 초미세 선폭을 구현합니다. I/O 밀도 확장 및 칩 간 신호 경로 최적화에 사용됩니다.',
+    confusion: 'BGA(Ball Grid Array)와 혼동 주의: RDL은 I/O를 재배치하는 배선층이며, BGA는 기판 하단에 솔더볼을 배열하는 패키지 유형입니다. RDL을 통해 BGA 구현이 가능합니다.',
+    refs: [
+      { name: 'Wikipedia – Redistribution Layer', url: 'https://en.wikipedia.org/wiki/Redistribution_layer' },
+      { name: 'Cadence – RDL Semiconductor Devices', url: 'https://resources.pcb.cadence.com/blog/2023-rdl-semiconductor-devices' },
+      { name: 'Cadence – The RDL Layer Revolution', url: 'https://resources.pcb.cadence.com/blog/2023-redistribution-layer-process-flow-for-3d-ics' },
+    ]
+  },
+  {
+    id: 'microbump', acronym: 'μ-Bump', full: 'Micro Bump (Microbump)', cat: 'interconnect',
+    def: '다이와 인터포저, 또는 다이와 다이 사이의 전기적·기계적 연결을 위한 초소형 솔더 범프. HBM 스택의 DRAM 다이 간 연결 및 칩과 인터포저 간 접합에 사용됩니다. 피치(범프 간격)는 수십 μm 수준으로, 하이브리드 본딩 대비 밀도가 낮지만 공정이 상대적으로 성숙합니다.',
+    confusion: 'C4 bump와 혼동 주의: C4(Controlled Collapse Chip Connection)는 칩을 패키지 기판에 연결하는 더 큰 솔더 범프입니다. 마이크로범프는 C4보다 훨씬 작고(피치 40~50μm vs 100μm+), 다이-다이 또는 다이-인터포저 연결에 사용됩니다.',
+    refs: [
+      { name: 'Applied Materials – HBM Microbumps', url: 'https://www.appliedmaterials.com/us/en/semiconductor/markets-and-inflections/memory/hbm.html' },
+      { name: 'IDTechEx – Advanced Semiconductor Packaging', url: 'https://www.idtechex.com/en/research-report/advanced-semiconductor-packaging/1042' },
+    ]
+  },
+
+  // ─── 소재/재료 ───
+  {
+    id: 'tim', acronym: 'TIM', full: 'Thermal Interface Material', cat: 'material',
+    def: '두 표면(칩-히트스프레더, 히트스프레더-히트싱크 등) 사이의 열 전달을 개선하는 소재. 표면의 미세한 요철을 채워 접촉 저항을 줄이고 열 방출을 촉진합니다. TIM-1(칩↔IHS), TIM-1.5(노리드 다이↔히트싱크), TIM-2(패키지↔히트싱크) 등으로 구분됩니다. 열전도성 그리스, 솔더, 상변화 소재, 열전도 테이프 등 다양한 형태가 있습니다.',
+    confusion: 'TIM1과 TIM2 혼동 주의: TIM1은 다이와 통합 히트스프레더(IHS) 사이에 적용되고, TIM2는 패키지와 외부 히트싱크 사이에 적용됩니다. 고성능 칩에서는 인듐 솔더 등 고열전도도 TIM이 사용됩니다.',
+    refs: [
+      { name: 'Nordson – Thermal Interface Material', url: 'https://www.nordson.com/en/divisions/electronics-solutions/your-process/fluid-types/thermal-interface-material-tim' },
+      { name: 'Semiconductor Digest – Choosing the Right TIM', url: 'https://sst.semiconductor-digest.com/2005/03/choosing-the-right-thermal-interface-material/' },
+      { name: 'Honeywell – Role of TIM in Modern Electronics (PDF)', url: 'https://prod-edam.honeywell.com/content/dam/honeywell-edam/pmt/oneam/en-us/electronic-materials/thermal-interface-materials/documents/hon-ess-adm-the-role-of-tims-in-modern-electronics.pdf' },
+    ]
+  },
+  {
+    id: 'underfill', acronym: 'Underfill', full: 'Underfill (언더필)', cat: 'material',
+    def: '플립칩 본딩 후 칩과 기판 사이의 좁은 간격(갭)에 모세관 현상으로 주입·경화되는 폴리머 소재. 솔더 범프에 가해지는 열팽창 불일치(CTE mismatch)로 인한 기계적 응력을 분산시켜 신뢰성을 향상시킵니다. 에폭시 계열이 주로 사용되며, NCP(Non-Conductive Paste) 또는 NCF(Non-Conductive Film) 형태도 존재합니다.',
+    confusion: 'MUF(Molded Underfill)와 혼동 주의: 기존 언더필은 칩과 기판 간 갭에만 충전되지만, MUF는 EMC 몰딩과 언더필 공정을 동시에 수행합니다. 하이브리드 본딩 구조에서는 언더필이 불필요합니다.',
+    refs: [
+      { name: 'Resonac – Advanced Packaging Materials', url: 'https://www.resonac.com/solution/column/003.html' },
+      { name: 'Rapidus – Back-End Process Explained', url: 'https://www.rapidus.co.jp/en/tech/te0010/' },
+    ]
+  },
+  {
+    id: 'emc', acronym: 'EMC', full: 'Epoxy Molding Compound', cat: 'material',
+    def: '반도체 패키지를 외부 환경(수분, 충격, 오염, 온도 변화)으로부터 보호하는 에폭시 수지 성형 재료. 칩과 인터커넥트를 완전히 봉지(encapsulation)합니다. 팬아웃 패키징에서는 재배선(RDL) 형성을 위한 기계적 캐리어 역할도 합니다. 실리카 필러 함량, 열팽창계수(CTE), 흡습성 등이 주요 품질 지표입니다.',
+    confusion: 'EMI(전자기 간섭)와 약어가 유사하여 혼동 주의. 또한 EMC는 전자기 적합성(Electromagnetic Compatibility)의 약어로도 쓰이므로 문맥 확인이 필요합니다. 반도체 패키징 문맥에서 EMC는 항상 Epoxy Molding Compound입니다.',
+    refs: [
+      { name: 'SLKOR – Basic Terminology of Advanced Packaging', url: 'https://www.slkoric.com/tech-web/basic-terminology-of-advanced-packaging/5777/' },
+      { name: 'Edge AI Vision – Advanced Packaging Materials', url: 'https://www.edge-ai-vision.com/2024/11/advanced-semiconductor-packaging-key-materials-and-processing-trends/' },
+    ]
+  },
+  {
+    id: 'ncf', acronym: 'NCF', full: 'Non-Conductive Film', cat: 'material',
+    def: '전기적 절연 특성을 가진 접착 필름으로, 다이와 기판 사이의 미세 갭을 충전하고 본딩을 지지합니다. 언더필의 필름 형태 대안으로, 정밀한 갭 제어와 신뢰성 있는 접착력을 제공합니다. HBM 스택 등 고밀도 패키징에서 마이크로범프와 함께 사용됩니다.',
+    confusion: 'NCP(Non-Conductive Paste)와 혼동 주의: NCF는 필름 형태, NCP는 페이스트 형태입니다. 둘 다 비전도성 접착 소재이지만 적용 방식이 다릅니다.',
+    refs: [
+      { name: 'Samsung – HBM & NCF Materials', url: 'https://semiconductor.samsung.com/dram/hbm/' },
+    ]
+  },
+
+  // ─── 공정 ───
+  {
+    id: 'cmp', acronym: 'CMP', full: 'Chemical Mechanical Planarization / Polishing', cat: 'process',
+    def: '화학적 반응과 기계적 연마를 결합하여 웨이퍼 표면을 평탄화하는 공정. 슬러리(연마 입자 + 화학약품)와 폴리싱 패드를 사용합니다. 다층 금속 배선 형성, TSV 후면 노출(reveal), 하이브리드 본딩 전 Cu/산화막 평탄화 등 반도체 전공정과 첨단 패키징 모두에 필수적입니다.',
+    confusion: 'CMP는 Chemical Mechanical Planarization과 Chemical Mechanical Polishing 두 가지로 불리며 동일한 공정을 의미합니다. TSV CMP는 TSV 형성 후 다이 후면을 연마하여 TSV 끝부분을 노출시키는 공정입니다.',
+    refs: [
+      { name: 'Semiconductor Digest – CMP', url: 'https://sst.semiconductor-digest.com/2015/12/chemical-mechanical-planarization/' },
+      { name: 'JEES – What Is CMP?', url: 'https://jeez-semicon.com/blog/what-is-chemical-mechanical-planarization-cmp-complete-guide/' },
+      { name: 'DuPont – CMP Slurries', url: 'https://www.dupont.com/electronics-industrial/cmp-slurries.html' },
+    ]
+  },
+  {
+    id: 'thinning', acronym: 'Wafer Thinning', full: 'Wafer Backgrinding / Thinning', cat: 'process',
+    def: '다이 적층 전 웨이퍼 후면을 그라인딩(backgrinding)하여 두께를 수십~수백 μm로 줄이는 공정. HBM 스택에서 각 DRAM 다이는 약 30~50μm까지 얇게 만들어 TSV를 노출시키고 적층 높이를 줄입니다. 얇은 다이는 취성이 높아 핸들링에 각별한 주의가 필요합니다.',
+    confusion: '웨이퍼 얇아지기 후에 CMP로 표면 마감이 이루어지며, 이 두 공정이 종종 함께 언급됩니다. "다이 얇아지기"와 "웨이퍼 박화"는 동일한 개념입니다.',
+    refs: [
+      { name: 'Applied Materials – HBM Manufacturing', url: 'https://www.appliedmaterials.com/us/en/semiconductor/markets-and-inflections/memory/hbm.html' },
+    ]
+  },
+  {
+    id: 'tcb', acronym: 'TCB', full: 'Thermal Compression Bonding', cat: 'process',
+    def: '열과 압력을 동시에 가하여 마이크로범프나 구리 필러를 본딩하는 공정. HBM 스택 조립 시 다이를 순차적으로 적층하는 데 사용됩니다. 솔더 리플로우 방식 대비 더 미세한 피치와 높은 정밀도를 구현할 수 있습니다.',
+    confusion: '리플로우 본딩과 혼동 주의: 리플로우는 열만 가해 솔더를 녹여 접합하지만, TCB는 열과 압력을 동시에 사용합니다. 하이브리드 본딩과 달리 TCB는 여전히 금속 범프를 사용합니다.',
+    refs: [
+      { name: 'SemiconductorX – HBM Supply Chain', url: 'https://semiconductorx.com/chip-type-hbm.html' },
+    ]
+  },
+
+  // ─── 패키징 기술 ───
+  {
+    id: 'interposer', acronym: 'Interposer', full: 'Silicon / Organic / Glass Interposer', cat: 'packaging',
+    def: '하나 이상의 칩과 기판 사이에 위치하는 중간 연결 레이어. 실리콘, 유기물, 유리 재질이 사용됩니다. 2.5D 패키징에서 다수의 다이(CPU, GPU, HBM 등)를 고밀도로 연결하는 배선 플랫폼 역할을 합니다. 실리콘 인터포저는 가장 정밀하지만 고가이며, 유기 인터포저는 저비용, 유리 인터포저는 차세대 옵션입니다.',
+    confusion: '기판(Substrate)과 혼동 주의: 인터포저는 칩과 패키지 기판 사이에 위치하는 중간층이고, 기판(PCB 또는 패키지 기판)은 인터포저 아래에 위치합니다. TSMC CoWoS-S(Silicon), CoWoS-L(RDL/Organic), CoWoS-R은 각각 인터포저 종류에 따른 구분입니다.',
+    refs: [
+      { name: 'Synopsys – Advanced Semiconductor Packaging Glossary', url: 'https://www.synopsys.com/glossary/what-is-advanced-semiconductor-packaging.html' },
+      { name: 'Semiconductor Engineering – Glass Substrates', url: 'https://semiengineering.com/glass-substrates-gain-momentum/' },
+    ]
+  },
+  {
+    id: 'hybridbonding', acronym: 'Hybrid Bonding', full: 'Cu-Cu Hybrid Bonding (Direct Bonding)', cat: 'packaging',
+    def: '금속(Cu)과 절연체(SiO₂ 등 유전체)를 동시에 직접 본딩하는 기술. 마이크로범프 없이 구리 패드가 서로 직접 접합되어 인터커넥트 피치를 수 μm 수준으로 극적으로 줄입니다(기존 마이크로범프 ~40μm → 하이브리드 본딩 <10μm). 더 높은 I/O 밀도, 낮은 기생 저항, 우수한 열특성을 제공합니다. Apple A 시리즈 이미지 센서 스택킹 등에 상용화되었고, 차세대 HBM4에서도 도입 예정입니다.',
+    confusion: '하이브리드 본딩 ≠ 와이어본딩 ≠ 플립칩 본딩. 하이브리드는 금속+유전체 동시 접합이며, 언더필이 필요 없습니다. W2W(Wafer-to-Wafer)와 D2W(Die-to-Wafer) 방식 두 가지가 있습니다.',
+    refs: [
+      { name: 'IDTechEx – Advanced Packaging 2025-2035', url: 'https://www.idtechex.com/en/research-report/advanced-semiconductor-packaging/1042' },
+      { name: 'Edge AI Vision – Key Materials and Processing Trends', url: 'https://www.edge-ai-vision.com/2024/11/advanced-semiconductor-packaging-key-materials-and-processing-trends/' },
+      { name: 'ASME – Current Advances in Advanced Packaging', url: 'https://asmedigitalcollection.asme.org/electronicpackaging/article/148/3/031010/1225361/Current-Advances-and-Outlook-of-Advanced-Packaging' },
+    ]
+  },
+  {
+    id: 'chiplet', acronym: 'Chiplet', full: 'Chiplet (칩렛)', cat: 'packaging',
+    def: '단일 대형 SoC 대신 기능별로 분리된 소형 다이(die)들을 하나의 패키지 내에 통합하는 이종 집적 설계 전략. 각 칩렛은 최적화된 공정 노드에서 제조된 후 인터포저나 패키지 기판 위에서 조립됩니다. AMD의 Zen CPU(CCD+IOD), Intel의 Foveros 등이 대표적 사례입니다. 수율 향상, 비용 절감, 유연한 설계가 장점입니다.',
+    confusion: '다이(Die)와 동의어처럼 사용되지만 엄밀히는 다릅니다. 칩렛은 "패키지 레벨에서 다른 칩렛들과 통합될 목적으로 설계된 미패키징 다이"입니다. UCIe(Universal Chiplet Interconnect Express)는 칩렛 간 표준 인터페이스입니다.',
+    refs: [
+      { name: 'Synopsys – What is Advanced Semiconductor Packaging', url: 'https://www.synopsys.com/glossary/what-is-advanced-semiconductor-packaging.html' },
+      { name: 'SLKOR – Basic Terminology', url: 'https://www.slkoric.com/tech-web/basic-terminology-of-advanced-packaging/5777/' },
+    ]
+  },
+  {
+    id: 'cowos', acronym: 'CoWoS', full: 'Chip on Wafer on Substrate', cat: 'packaging',
+    def: 'TSMC의 독점 2.5D 첨단 패키징 기술. 칩(로직 다이 + HBM)을 실리콘 인터포저 위에 본딩(CoW)하고, 이를 다시 유기 기판 위에 올리는(oS) 구조입니다. AI GPU(NVIDIA H100/H200/B200 등)의 핵심 패키징 방식으로, 최근 AI 붐의 공급망 병목 지점이기도 합니다. CoWoS-S(실리콘 인터포저), CoWoS-L(RDL 인터포저), CoWoS-R(하이브리드) 변형이 있습니다.',
+    confusion: 'InFO(Integrated Fan-Out)는 TSMC의 또다른 패키징 기술로 인터포저 없이 RDL만 사용합니다. CoWoS는 실리콘 인터포저 기반 2.5D이고, InFO는 팬아웃 방식입니다.',
+    refs: [
+      { name: 'SemiconductorX – HBM & CoWoS Supply Chain', url: 'https://semiconductorx.com/chip-type-hbm.html' },
+      { name: 'ASME – Current Advances in Advanced Packaging', url: 'https://asmedigitalcollection.asme.org/electronicpackaging/article/148/3/031010/1225361/Current-Advances-and-Outlook-of-Advanced-Packaging' },
+    ]
+  },
+  {
+    id: 'fowlp', acronym: 'FO-WLP', full: 'Fan-Out Wafer-Level Packaging', cat: 'packaging',
+    def: '다이를 EMC에 매립하고 다이 외부로 RDL을 확장(fan-out)하여 I/O를 재배치하는 패키징 기술. 별도의 기판이나 인터포저 없이 얇은 패키지를 구현합니다. TSMC InFO, ASE FoCoS 등이 대표적입니다. 스마트폰 AP(모바일 칩) 패키징에 광범위하게 사용됩니다.',
+    confusion: 'Fan-In WLP와 혼동 주의: Fan-In은 I/O를 다이 면적 안에서만 배치(기존 CSP), Fan-Out은 다이 외부로 I/O를 확장합니다. 팬아웃은 더 많은 I/O와 더 큰 인터포저 면적을 허용합니다.',
+    refs: [
+      { name: 'Synopsys – Advanced Packaging Glossary', url: 'https://www.synopsys.com/glossary/what-is-advanced-semiconductor-packaging.html' },
+      { name: 'SLKOR – Advanced Packaging Terminology', url: 'https://www.slkoric.com/tech-web/basic-terminology-of-advanced-packaging/5777/' },
+    ]
+  },
+  {
+    id: 'sip', acronym: 'SiP', full: 'System in Package', cat: 'packaging',
+    def: '복수의 다이, 수동 부품, 메모리 등 이종 소자를 하나의 패키지 안에 통합하는 방식. PCB 레벨 시스템을 패키지 수준으로 집적하며, 웨어러블·IoT·스마트폰 등에 활용됩니다. Apple Watch의 S 시리즈 칩이 대표적 SiP 사례입니다.',
+    confusion: 'SoC(System on Chip)와 혼동 주의: SoC는 단일 다이에 모든 기능을 집적, SiP는 여러 다이를 하나의 패키지에 통합합니다. 칩렛 기반 패키지는 SiP의 일종으로 볼 수 있습니다.',
+    refs: [
+      { name: 'Synopsys – Advanced Packaging Glossary', url: 'https://www.synopsys.com/glossary/what-is-advanced-semiconductor-packaging.html' },
+    ]
+  },
+
+  // ─── 기판 ───
+  {
+    id: 'glass-substrate', acronym: 'Glass Substrate', full: 'Glass Core / Glass Interposer Substrate', cat: 'substrate',
+    def: '실리콘이나 유기물 기판을 대체하는 차세대 패키징 기판 소재. 극저 CTE(열팽창계수, ~3~7 ppm/°C), 우수한 평탄도(<1μm), 낮은 유전 손실, 고주파 신호 무결성 등이 장점입니다. 기판 워피지 감소, 2μm 이하 RDL 구현 가능, 실리콘 인터포저보다 저렴합니다. Intel, Samsung, Corning, Absolics(SKC) 등이 상용화 개발 중이며, 2025~2027년 양산 목표입니다.',
+    confusion: '유리 인터포저와 유리 코어 기판은 다릅니다: 유리 인터포저는 칩과 기판 사이 중간층, 유리 코어 기판은 패키지 기판 자체의 코어가 유리입니다. TGV(Through-Glass Via)는 TSV의 유리 버전입니다.',
+    refs: [
+      { name: 'MDPI – A Review of Glass Substrate Technologies', url: 'https://www.mdpi.com/2674-0729/4/3/37' },
+      { name: 'Semiconductor Engineering – Glass Substrates Gain Momentum', url: 'https://semiengineering.com/glass-substrates-gain-momentum/' },
+      { name: 'Semiconductor Engineering – The Race to Glass Substrates', url: 'https://semiengineering.com/the-race-to-glass-substrates/' },
+    ]
+  },
+  {
+    id: 'organic-substrate', acronym: 'Organic Substrate', full: 'Organic Package Substrate (유기 기판)', cat: 'substrate',
+    def: '에폭시 수지와 유리섬유로 만들어진 전통적인 패키지 기판. BT(Bismaleimide Triazine) 레진이나 ABF(Ajinomoto Build-up Film) 계층을 사용하여 다층 배선을 구현합니다. 비용이 저렴하지만, 열팽창계수가 실리콘과 차이가 커(~17 ppm/°C) 워피지 문제가 발생하며, 선폭 한계로 인해 초미세 피치 구현에 어려움이 있습니다.',
+    confusion: '인터포저와 혼동 주의: 유기 기판은 최하단에 위치하는 패키지 기판, 유기 인터포저는 칩과 기판 사이 중간층입니다. ABF(아지노모토 빌드업 필름)는 현재 첨단 유기 기판의 핵심 소재입니다.',
+    refs: [
+      { name: 'Medium – Transition to Glass Substrates', url: 'https://medium.com/@anan.mirji/the-transition-to-glass-substrates-in-advanced-semiconductor-packaging-2301e5519e24' },
+      { name: 'Semiconductor Engineering – Glass vs Organic', url: 'https://semiengineering.com/glass-substrates-gain-momentum/' },
+    ]
+  },
+  {
+    id: 'tgv', acronym: 'TGV', full: 'Through-Glass Via', cat: 'substrate',
+    def: '유리 기판을 완전히 관통하는 수직 전기 연결. 레이저 가공(레이저 수정 후 HF 에칭) 또는 엑시머 레이저 직접 에칭으로 형성합니다. 유리 인터포저/기판에서 TSV와 동일한 역할을 수행하며, 유리의 낮은 유전 손실을 활용해 고주파 신호에 유리합니다.',
+    confusion: 'TSV(실리콘)와 TGV(유리)는 재료만 다를 뿐 기능은 동일합니다. 유리의 취성으로 인해 TGV 공정은 TSV보다 더 까다롭습니다.',
+    refs: [
+      { name: 'MDPI – Glass Substrate Review', url: 'https://www.mdpi.com/2674-0729/4/3/37' },
+    ]
+  },
+];
+
+// ─── Render ───────────────────────────────────
+const root = document.getElementById('glossary-root');
+
+function getCatStyle(cat) {
+  return CATEGORIES[cat] || { label: cat, color: '#888' };
+}
+
+function buildGlossary(terms) {
+  // group by category
+  const cats = {};
+  terms.forEach(t => {
+    if (!cats[t.cat]) cats[t.cat] = [];
+    cats[t.cat].push(t);
+  });
+
+  root.innerHTML = '';
+  const catOrder = ['memory','interconnect','material','process','packaging','substrate'];
+  catOrder.forEach(catKey => {
+    const catTerms = cats[catKey];
+    if (!catTerms || catTerms.length === 0) return;
+    const cs = getCatStyle(catKey);
+
+    const section = document.createElement('div');
+    section.className = 'category-section';
+    section.dataset.cat = catKey;
+
+    section.innerHTML = `
+      <div class="category-header">
+        <span class="category-dot" style="background:${cs.color}"></span>
+        <span class="category-title">${cs.label}</span>
+        <span class="category-line"></span>
+        <span class="category-count">${catTerms.length}</span>
+      </div>
+      <div class="term-grid"></div>
+    `;
+
+    const grid = section.querySelector('.term-grid');
+    catTerms.forEach(term => {
+      const card = document.createElement('div');
+      card.className = 'term-card';
+      card.dataset.id = term.id;
+      card.style.setProperty('--cat-color', cs.color);
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div>
+            <div class="term-acronym" style="color:${cs.color}">${term.acronym}</div>
+            <div class="term-full">${term.full}</div>
+          </div>
+          <span class="tag" style="background:${cs.color}22;color:${cs.color}">${cs.label}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-definition">${term.def}</div>
+          <div class="card-footer">
+            ${term.refs.slice(0,2).map(r => `
+              <span class="ref-link" onclick="event.stopPropagation();window.open('${r.url}','_blank')">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                ${r.name.split('–')[0].trim().split(' ').slice(0,2).join(' ')}
+              </span>`).join('')}
+          </div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => openModal(term));
+      grid.appendChild(card);
+    });
+
+    root.appendChild(section);
+  });
+
+  document.getElementById('stat-visible').textContent = terms.length;
+}
+
+// ─── Modal ────────────────────────────────────
+function openModal(term) {
+  const cs = getCatStyle(term.cat);
+  document.getElementById('m-acronym').textContent = term.acronym;
+  document.getElementById('m-acronym').style.color = cs.color;
+  document.getElementById('m-fullname').textContent = term.full;
+
+  document.getElementById('m-tag-wrap').innerHTML = `
+    <span class="tag" style="background:${cs.color}22;color:${cs.color}">${cs.label}</span>
+  `;
+
+  document.getElementById('m-definition').textContent = term.def;
+
+  const confWrap = document.getElementById('m-confusion-wrap');
+  const confEl = document.getElementById('m-confusion');
+  if (term.confusion) {
+    confWrap.style.display = '';
+    confEl.innerHTML = `<strong>⚡ 주의사항</strong>${term.confusion}`;
+  } else {
+    confWrap.style.display = 'none';
+  }
+
+  const refsEl = document.getElementById('m-refs');
+  refsEl.innerHTML = term.refs.map(r => `
+    <a href="${r.url}" target="_blank" rel="noopener" class="modal-ref-item">
+      <div class="ref-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </div>
+      <div class="ref-info">
+        <div class="ref-name">${r.name}</div>
+        <div class="ref-url">${r.url.replace('https://','').replace('http://','').split('/')[0]}</div>
+      </div>
+    </a>
+  `).join('');
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('modal-close').addEventListener('click', closeModal);
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ─── Search & Filter ─────────────────────────
+let activeCat = 'all';
+let searchQuery = '';
+
+function getFilteredTerms() {
+  return TERMS.filter(t => {
+    const catMatch = activeCat === 'all' || t.cat === activeCat;
+    const q = searchQuery.toLowerCase();
+    const textMatch = !q ||
+      t.acronym.toLowerCase().includes(q) ||
+      t.full.toLowerCase().includes(q) ||
+      t.def.toLowerCase().includes(q);
+    return catMatch && textMatch;
+  });
+}
+
+function refresh() {
+  const filtered = getFilteredTerms();
+  buildGlossary(filtered);
+  document.getElementById('no-results').classList.toggle('visible', filtered.length === 0);
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  refresh();
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    activeCat = btn.dataset.cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    refresh();
+  });
+});
+
+// ─── Theme Toggle ─────────────────────────────
+const html = document.documentElement;
+const toggleBtn = document.getElementById('theme-toggle');
+const toggleIcon = document.getElementById('toggle-icon');
+const toggleLabel = document.getElementById('toggle-label');
+
+// Restore saved preference
+const savedTheme = localStorage.getItem('glossary-theme') || 'dark';
+if (savedTheme === 'light') applyLight();
+
+function applyLight() {
+  html.classList.add('light');
+  toggleIcon.textContent = '☀️';
+  toggleLabel.textContent = 'Light';
+}
+
+function applyDark() {
+  html.classList.remove('light');
+  toggleIcon.textContent = '🌙';
+  toggleLabel.textContent = 'Dark';
+}
+
+toggleBtn.addEventListener('click', () => {
+  const isLight = html.classList.contains('light');
+  if (isLight) {
+    applyDark();
+    localStorage.setItem('glossary-theme', 'dark');
+  } else {
+    applyLight();
+    localStorage.setItem('glossary-theme', 'light');
+  }
+});
+
+// ─── Init ─────────────────────────────────────
+document.getElementById('stat-total').textContent = TERMS.length;
+buildGlossary(TERMS);
+</script>
+</body>
+</html>
